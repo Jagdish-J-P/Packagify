@@ -5,6 +5,7 @@ namespace Jagdish_J_P\Packagify\Console\Commands;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -43,27 +44,11 @@ class Packagify extends Command
     {
 
         do {
-            $vendorName = $this->argument('vendorName');
-            if (empty($vendorName))
-                $vendorName = $this->ask('Enter Vendor Name: [e.g. Jagdish-J-P]');
+            $vendorName = $this->argument('vendorName') ?? $this->ask('Enter Vendor Name: ', config('packagify.vendorName'));
             $vendorName = filter_var($vendorName, FILTER_SANITIZE_STRING);
 
-            $packageName = filter_var($this->argument('packageName'), FILTER_SANITIZE_STRING);
-            if (empty($packageName))
-                $packageName = $this->ask('Enter Package Name: [e.g. Package1]');
+            $packageName = $this->argument('packageName') ?? $this->ask('Enter Package Name: [e.g. Package1]', config('packagify.packageName'));
             $packageName = filter_var($packageName, FILTER_SANITIZE_STRING);
-
-            $emailId = $this->ask('Enter Package Maintainer\'s email id:');
-            $emailId = filter_var($emailId, FILTER_SANITIZE_EMAIL);
-
-            $description = $this->ask('Enter Package description (Optional):');
-            $description = filter_var($description, FILTER_SANITIZE_STRING);
-
-            $type = $this->anticipate('Enter Package type (e.g. library, project, metapackage, composer-plugin):', ['library', 'project', 'metapackage', 'composer - plugin']);
-            $type = filter_var($type, FILTER_SANITIZE_STRING);
-
-            $license = $this->ask('Enter License (Optional):');
-            $license = filter_var($license, FILTER_SANITIZE_STRING);
 
             $isValid = true;
             if (empty($vendorName) || empty($packageName)) {
@@ -72,30 +57,67 @@ class Packagify extends Command
             }
         } while (!$isValid);
 
+        $emailId = $this->ask('Enter Package Author\'s email id:', config('packagify.vendorEmailId'));
+        $emailId = filter_var($emailId, FILTER_SANITIZE_EMAIL);
+
+        $description = $this->ask('Enter Package description (Optional):');
+        $description = filter_var($description, FILTER_SANITIZE_STRING);
+
+        $type = $this->anticipate(
+            'Enter Package type (e.g. library, project, metapackage, composer-plugin):',
+            ['library', 'project', 'metapackage', 'composer - plugin'],
+            config('packagify.packageType')
+        );
+
+        $type = filter_var($type, FILTER_SANITIZE_STRING);
+
+        $license = $this->ask('Enter License (Optional):', config('packagify.packageLicense'));
+        $license = filter_var($license, FILTER_SANITIZE_STRING);
+
+        $structurePath = __DIR__ . "/../../../structure";
+
         $composerJson = $this->loadComposerJson($this->getComposerJsonPath());
         $composerJson['name'] = Str::lower("$vendorName/$packageName");
         $composerJson['description'] = $description;
         $composerJson['type'] = $type;
         $composerJson['license'] = $license;
+        $composerJson['authors'] = [];
         $composerJson['authors'][] = ['name' => Str::studly($vendorName), 'email' => $emailId];
 
+        $vendor = preg_replace("/[^a-zA-Z0-9_]+/", "", $vendorName);
+        $vendor = Str::replaceArray("-", [""], $vendor);
+
+        $composerJson["autoload"] = ["psr-4" => ["$vendor\\$packageName\\" => "src"]];
+
+        $providers = "$vendor\\$packageName\\Providers\\{$packageName}ServiceProvider";
+        $composerJson['extra'] = ['laravel' => ['providers' => [$providers]]];
+
         $this->saveComposerJson($composerJson, $this->getComposerJsonPath());
+
         $dir = new Filesystem;
-        $ds = DIRECTORY_SEPARATOR;
-        if (!$dir->exists($directory = base_path("packages$ds$vendorName$ds$packageName"))) {
+        if (!$dir->exists($directory = base_path("packages/$vendorName/$packageName"))) {
             $dir->makeDirectory($directory, 0755, true);
         }
 
-        if (!$dir->exists(__DIR__ . "{$ds}..{$ds}..{$ds}..{$ds}structure")) {
-            echo "Source Package Not exisist!";
+        if (!$dir->exists($structurePath)) {
+            $this->error("Source Package Not exisist!");
             return 0;
         }
 
-        if ($dir->copyDirectory(__DIR__ . "{$ds}..{$ds}..{$ds}..{$ds}structure", $directory))
-            echo 'Package Created!';
+        if ($dir->copyDirectory(__DIR__ . "/../../../structure", $directory))
+            $this->info('Package Structure Created!');
 
+        $this->info('Creating service provider!');
+
+        $serviceProvider = File::get("$structurePath/src/stubs/ServiceProvider.stub");
+        $serviceProvider = Str::replace("_VendorName_\\_PackageName_", "$vendor\\$packageName", $serviceProvider);
+        $serviceProvider = Str::replace("_ServiceProvider_", "{$packageName}ServiceProvider", $serviceProvider);
+        File::put("$directory/src/providers/{$packageName}ServiceProvider.php", $serviceProvider);
+
+        $this->registerPackage($vendorName, $packageName);
         return 1;
     }
+
     /**
      * Load and parse content of composer.json.
      *
@@ -135,8 +157,8 @@ class Packagify extends Command
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
         );
 
-        if (empty($$composerJsonPath))
-            $composerJsonPath = $this->getComposerJsonPath();
+        if (empty($composerJsonPath))
+            $composerJsonPath = $this->getBaseComposerJsonPath();
         if (File::put($composerJsonPath, $newComposerJson) === false) {
             throw new RuntimeException("Cannot write to composer.json [$composerJsonPath]");
         }
@@ -150,9 +172,12 @@ class Packagify extends Command
      *
      * @throws RuntimeException
      */
-    protected function registerPackage($vendor, $package, $relPackagePath)
+    protected function registerPackage($vendor, $package)
     {
-        $this->info('Register package in composer.json.');
+        $vendor = preg_replace("/[^a-zA-Z0-9\-]+/", "", $vendor);
+        $relPackagePath = "./packages/$vendor/$package";
+
+        $this->info('Registering package in composer.json.');
 
         $composerJson = $this->loadComposerJson();
 
@@ -166,21 +191,28 @@ class Packagify extends Command
         });
 
         if (count($filtered) === 0) {
-            $this->info('Register composer repository for package.');
+            $this->info('Registering composer repository for package.');
 
-            $composerJson['repositories'][] = (object) [
+            $composerJson['repositories'][$package] = (object) [
                 'type' => 'path',
                 'url' => $relPackagePath,
             ];
         } else {
             $this->info('Composer repository for package is already registered.');
         }
+        $repoName = Str::lower("$vendor/$package");
 
-        Arr::set($composerJson, "require.$vendor/$package", 'dev-master');
+        $devBranch = $this->choice(
+            'Choose development branch:',
+            ['dev-master', 'dev-main'],
+            config('packagify.devBranch')
+        );
+
+        Arr::set($composerJson, "require.$repoName", $devBranch);
 
         $this->saveComposerJson($composerJson);
 
-        $this->info('Package was successfully registered in composer.json.');
+        $this->info('Package successfully registered in composer.json.');
     }
 
     /**
@@ -192,8 +224,11 @@ class Packagify extends Command
      * @throws FileNotFoundException
      * @throws RuntimeException
      */
-    protected function unregisterPackage($vendor, $package, $relPackagePath)
+    protected function unregisterPackage($vendor, $package)
     {
+        $vendor = preg_replace("/[^a-zA-Z0-9\-]+/", "", $vendor);
+        $relPackagePath = "./packages/$vendor/$package";
+
         $this->info('Unregister package from composer.json.');
 
         $composerJson = $this->loadComposerJson();

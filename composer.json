@@ -27,10 +27,7 @@
         "laravel": {
             "providers": [
                 "Jagdish_J_P\\Packagify\\Providers\\PackagifyServiceProvider"
-            ],
-            "aliases": {
-                "Packagify": "Jagdish_J_P\\Packagify\\Facade"
-            }
+            ]
         }
     }
 }

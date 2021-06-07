@@ -1,12 +1,19 @@
 {
-    "name": "jagdish/test",
+    "name": "jagdish-j-p/mypackage",
     "description": "",
     "type": "library",
     "license": "MIT",
-    "authors": [],
+    "authors": [
+        {
+            "name": "JagdishJP",
+            "email": "jagdish1230@gmail.com"
+        }
+    ],
     "require": [],
     "autoload": {
-        "psr-4": []
+        "psr-4": {
+            "JagdishJP\\MyPackage\\": "src"
+        }
     },
     "autoload-dev": {
         "psr-4": []
@@ -16,8 +23,9 @@
     },
     "extra": {
         "laravel": {
-            "providers": [],
-            "aliases": []
+            "providers": [
+                "JagdishJP\\MyPackage\\Providers\\MyPackageServiceProvider"
+            ]
         }
     }
 }

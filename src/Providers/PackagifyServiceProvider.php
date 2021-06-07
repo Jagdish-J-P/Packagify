@@ -25,6 +25,8 @@ class PackagifyServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        $this->mergeConfigFrom(__DIR__ . '/../../Config/packagify.php', 'packagify');
+        $this->publishes([__DIR__ . "/../../config/packagify.php" => config_path('packagify.php')]);
         if ($this->app->runningInConsole()) {
             $this->commands([
                 Packagify::class,
