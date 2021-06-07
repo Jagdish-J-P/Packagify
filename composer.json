@@ -1,0 +1,36 @@
+{
+    "name": "jagdish-j-p/packagify",
+    "description": "Package to create empty package directory structure in project.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jagdish-J-P",
+            "email": "jagdish1230@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Jagdish_J_P\\Packagify\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Jagdish_J_P\\Packagify\\Tests\\": "tests"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jagdish_J_P\\Packagify\\Providers\\PackagifyServiceProvider"
+            ],
+            "aliases": {
+                "Packagify": "Jagdish_J_P\\Packagify\\Facade"
+            }
+        }
+    }
+}

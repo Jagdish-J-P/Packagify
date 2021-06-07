@@ -1,0 +1,23 @@
+{
+    "name": "jagdish/test",
+    "description": "",
+    "type": "library",
+    "license": "MIT",
+    "authors": [],
+    "require": [],
+    "autoload": {
+        "psr-4": []
+    },
+    "autoload-dev": {
+        "psr-4": []
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": []
+        }
+    }
+}
