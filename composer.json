@@ -1,0 +1,25 @@
+{
+    "name": "jagdish-j-p/emailverifier",
+    "description": "Package to verify email is real or fake",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jagdish-J-P",
+            "email": "jagdish1230@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Jagdish_J_P\\EmailVerifier\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jagdish_J_P\\EmailVerifier\\Providers\\EmailVerifierServiceProvider"
+            ]
+        }
+    }
+}
