@@ -137,7 +137,7 @@ class Packagify extends Command
         $license = $this->ask('Enter License (Optional):', config('packagify.packageLicense'));
         $license = filter_var($license, FILTER_SANITIZE_STRING);
 
-        $composerJson = $this->loadComposerJson($this->getComposerJsonPath());
+        $composerJson = $this->loadComposerJson($this->getComposerJsonStub());
         $composerJson['name'] = Str::lower("$vendorName/$packageName");
         $composerJson['description'] = $description;
         $composerJson['type'] = $type;
@@ -302,7 +302,7 @@ class Packagify extends Command
      *
      * @return string
      */
-    protected function getComposerJsonPath()
+    protected function getComposerJsonStub()
     {
 
         return __DIR__ . '/../../../stubs/composer.stub';
