@@ -1,0 +1,27 @@
+{
+    "name": "",
+    "description": "",
+    "type": "",
+    "license": "",
+    "authors": [
+        {
+            "name": "",
+            "email": ""
+        }
+    ],
+    "require": [],
+    "autoload": {
+        "psr-4": {}
+    },
+    "autoload-dev": {
+        "psr-4": []
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": []
+        }
+    }
+}

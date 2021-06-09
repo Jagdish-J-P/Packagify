@@ -5,9 +5,10 @@ namespace Jagdish_J_P\Packagify\Console\Commands;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Jagdish_J_P\Packagify\Exceptions\RuntimeException;
 
 class Packagify extends Command
 {
@@ -26,6 +27,20 @@ class Packagify extends Command
     protected $description = 'Command to create package scaffolding';
 
     /**
+     * package directory path
+     *
+     * @var string
+     */
+    protected $packageDirectory = '';
+
+    /**
+     * stubs path
+     *
+     * @var string
+     */
+    protected $stubs = __DIR__ . "/../../../stubs";
+
+    /**
      * Create a new command instance.
      *
      * @return void
@@ -42,7 +57,6 @@ class Packagify extends Command
      */
     public function handle()
     {
-
         do {
             $vendorName = $this->argument('vendorName') ?? $this->ask('Enter Vendor Name: ', config('packagify.vendorName'));
             $vendorName = filter_var($vendorName, FILTER_SANITIZE_STRING);
@@ -56,6 +70,55 @@ class Packagify extends Command
                 $isValid = false;
             }
         } while (!$isValid);
+
+        $this->packageDirectory = base_path("packages/$vendorName/$packageName");
+        $dir = new Filesystem;
+        if (!$dir->exists($this->packageDirectory)) {
+            $dir->makeDirectory($this->packageDirectory, 0755, true);
+        }
+
+        if ($this->createPackageStructure($this->packageDirectory))
+            $this->info('Package Structure Created!');
+
+        $this->info('Creating package composer.json');
+        $this->createComposer($vendorName, $packageName);
+
+        $this->info('Creating service provider');
+        $this->createServiceProvider($vendorName, $packageName);
+
+        $this->registerPackage($vendorName, $packageName);
+        return 1;
+    }
+
+    /**
+     * creates service provider for package
+     *
+     */
+    protected function createServiceProvider(String $vendor, String $package)
+    {
+        $vendor = preg_replace("/[^a-zA-Z0-9_]+/", "", $vendor);
+        $vendor = Str::replaceArray("-", [""], $vendor);
+
+        $package = preg_replace("/[^a-zA-Z0-9_]+/", "", $package);
+        $package = Str::replaceArray("-", [""], $package);
+
+        $serviceProvider = File::get("$this->stubs/ServiceProvider.stub");
+        $serviceProvider = Str::replace("_VendorName_\\_PackageName_", "$vendor\\$package", $serviceProvider);
+        $serviceProvider = Str::replace("_ServiceProvider_", "{$package}ServiceProvider", $serviceProvider);
+        File::put("$this->packageDirectory/src/providers/{$package}ServiceProvider.php", $serviceProvider);
+    }
+
+    /**
+     * creates package composer
+     *
+     */
+    protected function createComposer(String $vendorName, String $packageName)
+    {
+        $vendor = preg_replace("/[^a-zA-Z0-9_]+/", "", $vendorName);
+        $vendor = Str::replaceArray("-", [""], $vendor);
+
+        $package = preg_replace("/[^a-zA-Z0-9_]+/", "", $packageName);
+        $package = Str::replaceArray("-", [""], $package);
 
         $emailId = $this->ask('Enter Package Author\'s email id:', config('packagify.vendorEmailId'));
         $emailId = filter_var($emailId, FILTER_SANITIZE_EMAIL);
@@ -74,8 +137,6 @@ class Packagify extends Command
         $license = $this->ask('Enter License (Optional):', config('packagify.packageLicense'));
         $license = filter_var($license, FILTER_SANITIZE_STRING);
 
-        $structurePath = __DIR__ . "/../../../structure";
-
         $composerJson = $this->loadComposerJson($this->getComposerJsonPath());
         $composerJson['name'] = Str::lower("$vendorName/$packageName");
         $composerJson['description'] = $description;
@@ -84,38 +145,23 @@ class Packagify extends Command
         $composerJson['authors'] = [];
         $composerJson['authors'][] = ['name' => Str::studly($vendorName), 'email' => $emailId];
 
-        $vendor = preg_replace("/[^a-zA-Z0-9_]+/", "", $vendorName);
-        $vendor = Str::replaceArray("-", [""], $vendor);
+        $composerJson["autoload"] = ["psr-4" => ["$vendor\\$package\\" => "src"]];
 
-        $composerJson["autoload"] = ["psr-4" => ["$vendor\\$packageName\\" => "src"]];
-
-        $providers = "$vendor\\$packageName\\Providers\\{$packageName}ServiceProvider";
+        $providers = "$vendor\\$package\\Providers\\{$package}ServiceProvider";
         $composerJson['extra'] = ['laravel' => ['providers' => [$providers]]];
 
-        $this->saveComposerJson($composerJson, $this->getComposerJsonPath());
+        $this->saveComposerJson($composerJson, $this->packageDirectory . "/composer.json");
+    }
 
-        $dir = new Filesystem;
-        if (!$dir->exists($directory = base_path("packages/$vendorName/$packageName"))) {
-            $dir->makeDirectory($directory, 0755, true);
+    /**
+     * creates structure of package
+     */
+    protected function createPackageStructure(String $basePath)
+    {
+        $structure = config('packagify.packageStructure');
+        foreach ($structure as $directory) {
+            File::makeDirectory("$basePath\\$directory");
         }
-
-        if (!$dir->exists($structurePath)) {
-            $this->error("Source Package Not exisist!");
-            return 0;
-        }
-
-        if ($dir->copyDirectory(__DIR__ . "/../../../structure", $directory))
-            $this->info('Package Structure Created!');
-
-        $this->info('Creating service provider!');
-
-        $serviceProvider = File::get("$structurePath/src/stubs/ServiceProvider.stub");
-        $serviceProvider = Str::replace("_VendorName_\\_PackageName_", "$vendor\\$packageName", $serviceProvider);
-        $serviceProvider = Str::replace("_ServiceProvider_", "{$packageName}ServiceProvider", $serviceProvider);
-        File::put("$directory/src/providers/{$packageName}ServiceProvider.php", $serviceProvider);
-
-        $this->registerPackage($vendorName, $packageName);
-        return 1;
     }
 
     /**
@@ -259,7 +305,7 @@ class Packagify extends Command
     protected function getComposerJsonPath()
     {
 
-        return __DIR__ . '/../../../structure/composer.json';
+        return __DIR__ . '/../../../stubs/composer.stub';
     }
 
     /**
