@@ -1,4 +1,5 @@
 # Packagify
+
 A basic Laravel Package scaffolder
 
 Package is in development.
@@ -6,6 +7,7 @@ Package is in development.
 Package is created to scaffold laravel package.
 
 # Installation
+
 You can install the package via composer:
 
 ```
@@ -23,3 +25,5 @@ php artisan vendor:publish --provider="JagdishJP\Packagify\Providers\PackagifySe
 ```
 php artisan package:create
 ```
+
+Follow the instructions and your package will be created.
