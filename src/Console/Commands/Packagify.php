@@ -96,11 +96,11 @@ class Packagify extends Command
      */
     protected function createServiceProvider(String $vendor, String $package)
     {
-        $vendor = preg_replace("/[^a-zA-Z0-9_]+/", "", $vendor);
-        $vendor = Str::replaceArray("-", [""], $vendor);
+        $vendor = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $vendor);
+        $vendor = Str::studly($vendor);
 
-        $package = preg_replace("/[^a-zA-Z0-9_]+/", "", $package);
-        $package = Str::replaceArray("-", [""], $package);
+        $package = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $package);
+        $package = Str::studly($package);
 
         $serviceProvider = File::get("$this->stubs/ServiceProvider.stub");
         $serviceProvider = Str::replace("_VendorName_\\_PackageName_", "$vendor\\$package", $serviceProvider);
@@ -114,11 +114,11 @@ class Packagify extends Command
      */
     protected function createComposer(String $vendorName, String $packageName)
     {
-        $vendor = preg_replace("/[^a-zA-Z0-9_]+/", "", $vendorName);
-        $vendor = Str::replaceArray("-", [""], $vendor);
+        $vendor = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $vendorName);
+        $vendor = Str::studly($vendor);
 
-        $package = preg_replace("/[^a-zA-Z0-9_]+/", "", $packageName);
-        $package = Str::replaceArray("-", [""], $package);
+        $package = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $packageName);
+        $package = Str::studly($package);
 
         $emailId = $this->ask('Enter Package Author\'s email id:', config('packagify.vendorEmailId'));
         $emailId = filter_var($emailId, FILTER_SANITIZE_EMAIL);
