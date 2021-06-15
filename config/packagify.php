@@ -9,6 +9,6 @@ return [
     'vendorEmailId' => 'jagdish1230@gmail.com', // Replace with vendor email id
     'packageType' => 'library',
     'packageLicense' => 'MIT',
-    'devBranch' => 'dev-master',
+    'devBranch' => 'dev-main',
     'packageStructure' => ["config", "database", "database\\factories", "database\\migrations", "database\\seeders", "public", "resources", "resources\\lang", "resources\\views", "resources\\lang\\en", "routes", "src", "src\\Console", "src\\Console\\Commands", "src\\Http", "src\\Http\\Controllers", "src\\Http\\Middleware", "src\\Models", "src\\Providers"]
 ];
