@@ -23,7 +23,7 @@ php artisan vendor:publish --provider="JagdishJP\Packagify\Providers\PackagifySe
 to add/remove package directories edit config/packagify.php file
 
 ```
-'packageStructure' => ["config", "database", "database\\factories", "database\\migrations", "database\\seeders", "public", "resources", "resources\\lang", "resources\\views", "resources\\lang\\en", "routes", "src", "src\\Console", "src\\Console\\Commands", "src\\Http", "src\\Http\\Controllers", "src\\Http\\Middleware", "src\\Models", "src\\Providers"]
+'packageStructure' => ["config", "database", "database\\factories", "database\\migrations", "database\\seeders", "public", "resources", "resources\\lang", "resources\\lang\\en", "resources\\views", "routes", "src", "src\\Console", "src\\Console\\Commands", "src\\Http", "src\\Http\\Controllers", "src\\Http\\Middleware", "src\\Models", "src\\Providers"]
 ```
 
 **packageStructure** contains list of directories to create for your package. You can add or remove any directory.
