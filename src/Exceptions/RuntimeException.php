@@ -1,6 +1,6 @@
 <?php
 
-namespace Jagdish_J_P\Packagify\Exceptions;
+namespace JagdishJP\Packagify\Exceptions;
 
 class RuntimeException extends \RuntimeException
 {

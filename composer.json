@@ -12,12 +12,12 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "Jagdish_J_P\\Packagify\\": "src"
+            "JagdishJP\\Packagify\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Jagdish_J_P\\Packagify\\Tests\\": "tests"
+            "JagdishJP\\Packagify\\Tests\\": "tests"
         }
     },
     "config": {
@@ -26,7 +26,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Jagdish_J_P\\Packagify\\Providers\\PackagifyServiceProvider"
+                "JagdishJP\\Packagify\\Providers\\PackagifyServiceProvider"
             ]
         }
     }

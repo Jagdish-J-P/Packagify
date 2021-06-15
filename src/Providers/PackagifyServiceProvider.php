@@ -1,9 +1,9 @@
 <?php
 
-namespace Jagdish_J_P\Packagify\Providers;
+namespace JagdishJP\Packagify\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Jagdish_J_P\Packagify\Console\Commands\Packagify;
+use JagdishJP\Packagify\Console\Commands\Packagify;
 
 class PackagifyServiceProvider extends ServiceProvider
 {

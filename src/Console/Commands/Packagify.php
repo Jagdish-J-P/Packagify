@@ -1,6 +1,6 @@
 <?php
 
-namespace Jagdish_J_P\Packagify\Console\Commands;
+namespace JagdishJP\Packagify\Console\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Console\Command;
@@ -8,7 +8,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Jagdish_J_P\Packagify\Exceptions\RuntimeException;
+use JagdishJP\Packagify\Exceptions\RuntimeException;
 
 class Packagify extends Command
 {
