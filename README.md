@@ -1,10 +1,10 @@
 # Packagify
 
-A basic Laravel Package scaffolder
+A basic Laravel Package skelton maker.
 
-Package is in development.
+Package is currently in development.
 
-Package is created to scaffold laravel package.
+This Package is created to scaffold laravel package.
 
 # Installation
 
