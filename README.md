@@ -15,7 +15,7 @@ composer require jagdish-j-p/packagify
 Then run the publish command to publish the config file
 
 ```
-php artisan vendor:publish --provider="JagdishJP\Packagify\PackagifyServiceProvider"
+php artisan vendor:publish --provider="JagdishJP\Packagify\Providers\PackagifyServiceProvider"
 ```
 
 # Usage
