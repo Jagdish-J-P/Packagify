@@ -3,6 +3,7 @@
 namespace JagdishJP\Packagify\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use JagdishJP\Packagify\Console\Commands\PackageMake;
 use JagdishJP\Packagify\Console\Commands\Packagify;
 
 class PackagifyServiceProvider extends ServiceProvider
@@ -30,6 +31,7 @@ class PackagifyServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 Packagify::class,
+                PackageMake::class,
             ]);
         }
     }

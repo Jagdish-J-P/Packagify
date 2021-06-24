@@ -4,9 +4,9 @@
  * Default values for package. You can change this at run-time
  */
 return [
-    'vendorName' => 'Jagdish-J-P', // Replace with your vendor name
-    'packageName' => 'MyPackage', // Replace with your package name
-    'vendorEmailId' => 'jagdish1230@gmail.com', // Replace with vendor email id
+    'vendorName' => env('PACKAGE_VENDOR', 'Jagdish-J-P'), // Replace with your vendor name
+    'packageName' => env('PACKAGE_NAME', 'MyPackage'), // Replace with your package name
+    'vendorEmailId' => env('VENDOR_EMAIL_ID', 'jagdish1230@gmail.com'), // Replace with vendor email id
     'packageType' => 'library',
     'packageLicense' => 'MIT',
     'devBranch' => 'dev-main',
