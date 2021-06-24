@@ -30,8 +30,33 @@ to add/remove package directories edit config/packagify.php file
 
 # Usage
 
+Set .env file for default configuration
+
+`
+PACKAGE_VENDOR="Vendor Name"
+PACKAGE_NAME="Package Name"
+VENDOR_EMAIL_ID="user@example.com"
+`
+
+**Create Package**
 ```
 php artisan package:create
 ```
 
 Follow the instructions and your package will be created.
+
+**Create Command**
+```
+php artisan package:make command CommandName
+```
+
+**Create Controller**
+```
+php artisan package:make controller ControllerName
+```
+
+**Create Model**
+```
+php artisan package:make model ModelName
+```
+
