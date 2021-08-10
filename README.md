@@ -1,4 +1,4 @@
-# Packagify
+# Laravel Package Maker
 
 A basic Laravel Package skelton maker.
 
@@ -11,13 +11,13 @@ This Package is created to scaffold laravel package.
 You can install the package via composer:
 
 ```
-composer require jagdish-j-p/packagify
+composer require jagdish-j-p/laravel-package-maker
 ```
 
 Then run the publish command to publish the config file to edit packagify configuration.
 
 ```
-php artisan vendor:publish --provider="JagdishJP\Packagify\Providers\PackagifyServiceProvider"
+php artisan vendor:publish --provider="JagdishJP\LaravelPackageMaker\Providers\LaravelPackageMakerServiceProvider"
 ```
 
 to add/remove package directories edit config/packagify.php file

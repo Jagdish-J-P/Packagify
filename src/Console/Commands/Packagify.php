@@ -1,6 +1,6 @@
 <?php
 
-namespace JagdishJP\Packagify\Console\Commands;
+namespace JagdishJP\LaravelPackageMaker\Console\Commands;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Console\Command;
@@ -8,7 +8,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use JagdishJP\Packagify\Exceptions\RuntimeException;
+use JagdishJP\LaravelPackageMaker\Exceptions\RuntimeException;
 
 class Packagify extends Command
 {

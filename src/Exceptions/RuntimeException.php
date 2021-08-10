@@ -1,6 +1,6 @@
 <?php
 
-namespace JagdishJP\Packagify\Exceptions;
+namespace JagdishJP\LaravelPackageMaker\Exceptions;
 
 class RuntimeException extends \RuntimeException
 {

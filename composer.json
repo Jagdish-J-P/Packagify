@@ -1,33 +1,33 @@
 {
-    "name": "jagdish-j-p/packagify",
-    "description": "Package to create empty package directory structure in project.",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Jagdish-J-P",
-            "email": "jagdish1230@gmail.com"
-        }
-    ],
-    "require": {},
-    "autoload": {
-        "psr-4": {
-            "JagdishJP\\Packagify\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "JagdishJP\\Packagify\\Tests\\": "tests"
-        }
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "JagdishJP\\Packagify\\Providers\\PackagifyServiceProvider"
-            ]
-        }
+  "name": "jagdish-j-p/laravel-package-maker",
+  "description": "Package to create empty package directory structure in project.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jagdish-J-P",
+      "email": "jagdish1230@gmail.com"
     }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "JagdishJP\\LaravelPackageMaker\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "JagdishJP\\LaravelPackageMaker\\Tests\\": "tests"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "JagdishJP\\LaravelPackageMaker\\Providers\\LaravelPackageMakerServiceProvider"
+      ]
+    }
+  }
 }

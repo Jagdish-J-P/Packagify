@@ -1,12 +1,12 @@
 <?php
 
-namespace JagdishJP\Packagify\Providers;
+namespace JagdishJP\LaravelPackageMaker\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use JagdishJP\Packagify\Console\Commands\PackageMake;
-use JagdishJP\Packagify\Console\Commands\Packagify;
+use JagdishJP\LaravelPackageMaker\Console\Commands\PackageMake;
+use JagdishJP\LaravelPackageMaker\Console\Commands\Packagify;
 
-class PackagifyServiceProvider extends ServiceProvider
+class LaravelPackageMakerServiceProvider extends ServiceProvider
 {
     /**
      * Register services.

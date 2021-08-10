@@ -1,6 +1,6 @@
 <?php
 
-namespace JagdishJP\Packagify\Console\Commands;
+namespace JagdishJP\LaravelPackageMaker\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
