@@ -32,11 +32,11 @@ to add/remove package directories edit config/packagify.php file
 
 Set .env file for default configuration
 
-`
+```
 PACKAGE_VENDOR="Vendor Name"
 PACKAGE_NAME="Package Name"
 VENDOR_EMAIL_ID="user@example.com"
-`
+```
 
 **Create Package**
 ```
